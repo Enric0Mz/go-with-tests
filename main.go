@@ -2,6 +2,7 @@ package main
 
 const englishHelloPrefix = "Hello "
 const spanishPrefix = "Hola "
+const frentchPrefix = "Bonjour "
 const Stranger = "Stranger"
 
 func Hello(name, lang string) string {
@@ -13,8 +14,12 @@ func Hello(name, lang string) string {
 }
 
 func DefinePrefix(lang string) string {
-	if lang == "Spanish" {
+	switch lang {
+	case "Spanish":
 		return spanishPrefix
+	case "French":
+		return frentchPrefix
+	default:
+		return englishHelloPrefix
 	}
-	return englishHelloPrefix
 }
