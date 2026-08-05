@@ -8,16 +8,24 @@ import (
 
 func TestHello(t *testing.T) {
 	t.Run("should return Hello name when name is provided", func(t *testing.T) {
-		got := Hello("Jorge")
+		got := Hello("Jorge", "")
 		want := "Hello Jorge"
 
 		require.Equal(t, got, want)
 	})
 	t.Run("should return Hello Stranger when no name is provided", func(t *testing.T) {
-		got := Hello("")
+		got := Hello("", "")
 		want := "Hello Stranger"
 
 		require.Equal(t, got, want)
+	})
+
+	t.Run("should return in desired language when language is provided", func(t *testing.T) {
+		got := Hello("Clark", "Spanish")
+		want := "Hola Clark"
+
+		require.Equal(t, got, want)
+
 	})
 
 }

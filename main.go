@@ -1,11 +1,20 @@
 package main
 
 const englishHelloPrefix = "Hello "
+const spanishPrefix = "Hola "
 const Stranger = "Stranger"
 
-func Hello(name string) string {
+func Hello(name, lang string) string {
+	prefix := DefinePrefix(lang)
 	if name == "" {
-		return englishHelloPrefix + Stranger
+		return prefix + Stranger
 	}
-	return englishHelloPrefix + name
+	return prefix + name
+}
+
+func DefinePrefix(lang string) string {
+	if lang == "Spanish" {
+		return spanishPrefix
+	}
+	return englishHelloPrefix
 }
