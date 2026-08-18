@@ -12,3 +12,9 @@ func TestRepeat(t *testing.T) {
 
 	require.Equal(t, got, exp)
 }
+
+func BenchMarkLoop(b *testing.B) {
+	for b.Loop() {
+		Repeat("a")
+	}
+}
