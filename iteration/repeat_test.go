@@ -7,7 +7,7 @@ import (
 )
 
 func TestRepeat(t *testing.T) {
-	got := Repeat("a")
+	got := Repeat("a", 5)
 	exp := "aaaaa"
 
 	require.Equal(t, got, exp)
@@ -15,6 +15,6 @@ func TestRepeat(t *testing.T) {
 
 func BenchmarkLoop(b *testing.B) {
 	for b.Loop() {
-		Repeat("a")
+		Repeat("a", 50)
 	}
 }

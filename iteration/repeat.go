@@ -2,9 +2,9 @@ package iteration
 
 import "strings"
 
-func Repeat(val string) string {
+func Repeat(val string, repeat int) string {
 	var res strings.Builder
-	for range 5 {
+	for range repeat {
 		res.WriteString(val)
 	}
 	return res.String()
