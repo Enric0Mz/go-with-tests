@@ -17,25 +17,22 @@ func TestPerimeter(t *testing.T) {
 
 func TestArea(t *testing.T) {
 
-	checkArea := func(t testing.TB, shape Shape, exp float64) {
-		t.Helper()
-		act := shape.Area()
-		require.Equal(t, exp, act)
+	areaTests := []struct {
+		name  string
+		shape Shape
+		want  float64
+	}{
+		{"Rectangle", Rectangle{12.0, 6.0}, 72.0},
+		{"Circle", Circle{10.0}, 314.1592653589793},
+		{"Triangle", Triangle{12.0, 6.0}, 361.0},
 	}
 
-	t.Run("rectangle", func(t *testing.T) {
-		exp := 100.0
-		rectangle := Rectangle{10.0, 10.0}
+	for _, tt := range areaTests {
+		t.Run(tt.name, func(t *testing.T) {
+			require.Equal(t, tt.shape.Area(), tt.want)
+		})
+	}
 
-		checkArea(t, rectangle, exp)
-	})
-	t.Run("circle", func(t *testing.T) {
-		exp := 314.1592653589793
-
-		circle := Circle{10.0}
-
-		checkArea(t, circle, exp)
-	})
 }
 
 func Example_floatComparison() {
