@@ -2,6 +2,7 @@ package maps
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -58,6 +59,60 @@ func TestDictionaryAdd(t *testing.T) {
 		require.Equal(t, expect, err.Error())
 	})
 
+}
+
+func TestDictionaryUpdate(t *testing.T) {
+	t.Run("existing word", func(t *testing.T) {
+
+		keyW := "test"
+		updatedD := "this is the new word definition"
+		dictionary := Dictionary{keyW: "this is a test definition"}
+
+		err := dictionary.Update("test", updatedD)
+
+		require.NoError(t, err)
+
+		assertDefinition(t, dictionary, keyW, updatedD)
+	})
+	t.Run("new word", func(t *testing.T) {
+		dictionary := Dictionary{}
+
+		err := dictionary.Update("test", "update inexistent word")
+
+		if !errors.Is(err, ErrNotFound) {
+			panic("error should be ErrNotFound")
+		}
+
+		require.Error(t, err)
+		require.Equal(t, fmt.Sprintf("cannot perform operation: word 'test' %s", ErrNotFound.Error()), err.Error())
+	})
+}
+
+func TestDictionaryDelete(t *testing.T) {
+	t.Run("existing word", func(t *testing.T) {
+
+		keyW := "word"
+		dictionary := Dictionary{keyW: "this is a word"}
+
+		dictionary.Delete(keyW)
+
+		_, err := dictionary.Search(keyW)
+
+		require.Error(t, err)
+		require.ErrorIs(t, err, ErrNotFound)
+	})
+
+	t.Run("Unexisting word", func(t *testing.T) {
+		keyW := "word"
+		d := Dictionary{}
+
+		err := d.Delete(keyW)
+
+		require.Error(t, err)
+		require.ErrorIs(t, err, ErrNotFound)
+		require.Equal(t, fmt.Sprintf("cannot perform operation: word 'word' %s", ErrNotFound.Error()), err.Error())
+
+	})
 }
 
 func assertDefinition(t testing.TB, dict Dictionary, w string, expect string) {

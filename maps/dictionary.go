@@ -32,3 +32,29 @@ func (d Dictionary) Add(w string, desc string) error {
 	d[w] = desc
 	return nil
 }
+
+func (d Dictionary) Update(w, desc string) error {
+	err := searchWord(d, w)
+	if err != nil {
+		return err
+	}
+	d[w] = desc
+	return nil
+}
+
+func (d Dictionary) Delete(w string) error {
+	err := searchWord(d, w)
+	if err != nil {
+		return err
+	}
+	delete(d, w)
+	return nil
+}
+
+func searchWord(d Dictionary, w string) error {
+	_, err := d.Search(w)
+	if err != nil {
+		return fmt.Errorf("cannot perform operation: %w", err)
+	}
+	return nil
+}
