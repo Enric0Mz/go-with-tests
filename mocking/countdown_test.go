@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -35,5 +36,13 @@ Go!`
 		}
 		Countdown(spySleeper, spySleeper)
 		require.Equal(t, expect, spySleeper.Calls)
+	})
+	t.Run("Configurable sleeper", func(t *testing.T) {
+		sleepTime := 3 * time.Second
+		spyTime := &SpyTime{}
+		sleeper := ConfigurableSleeper{sleepTime, spyTime.SetDurationSlept}
+		sleeper.Sleep()
+
+		require.Equal(t, sleepTime, spyTime.durationSlept)
 	})
 }

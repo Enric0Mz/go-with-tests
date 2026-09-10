@@ -20,12 +20,29 @@ type SpyCoundDownOperations struct {
 	Calls []string
 }
 
+type SpyTime struct {
+	durationSlept time.Duration
+}
+
+func (s *SpyTime) SetDurationSlept(duration time.Duration) {
+	s.durationSlept = duration
+}
+
+type ConfigurableSleeper struct {
+	duration time.Duration
+	sleep    func(time.Duration)
+}
+
 func (d *DefaultSleeper) Sleep() {
 	time.Sleep(1 * time.Second)
 }
 
 func (s *SpyCoundDownOperations) Sleep() {
 	s.Calls = append(s.Calls, sleep)
+}
+
+func (c *ConfigurableSleeper) Sleep() {
+	c.sleep(c.duration)
 }
 
 func (s *SpyCoundDownOperations) Write(p []byte) (i int, err error) {
