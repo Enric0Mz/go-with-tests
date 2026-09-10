@@ -15,7 +15,6 @@ type SpySleeper struct {
 	Calls int
 }
 
-type DefaultSleeper struct{}
 type SpyCoundDownOperations struct {
 	Calls []string
 }
@@ -31,10 +30,6 @@ func (s *SpyTime) SetDurationSlept(duration time.Duration) {
 type ConfigurableSleeper struct {
 	duration time.Duration
 	sleep    func(time.Duration)
-}
-
-func (d *DefaultSleeper) Sleep() {
-	time.Sleep(1 * time.Second)
 }
 
 func (s *SpyCoundDownOperations) Sleep() {
@@ -67,5 +62,7 @@ func Countdown(writter io.Writer, sleeper Sleeper) {
 }
 
 func main() {
-	Countdown(os.Stdout, &DefaultSleeper{})
+	secondsToSleep := 2 * time.Second
+	sleeper := &ConfigurableSleeper{secondsToSleep, time.Sleep}
+	Countdown(os.Stdout, sleeper)
 }
