@@ -7,30 +7,26 @@ import (
 )
 
 func Racer(a, b string) (winner string) {
-	startA := time.Now()
 
-	resp, err := http.Get(a)
-
-	if err == nil {
-		resp.Body.Close()
-	}
-	timeA := time.Since(startA)
-	fmt.Printf("Server A took %s miliseconds\n", timeA)
-
-	startB := time.Now()
-
-	resp, err = http.Get(b)
-
-	if err != nil {
-		resp.Body.Close()
-	}
-
-	timeB := time.Since(startB)
-	fmt.Printf("Server B took %s miliseconds", timeB)
+	timeA := measureResponseTime(a)
+	timeB := measureResponseTime(b)
 
 	if timeA > timeB {
 		return b
 	}
 	return a
 
+}
+
+func measureResponseTime(url string) time.Duration {
+	start := time.Now()
+
+	resp, err := http.Get(url)
+
+	if err == nil {
+		resp.Body.Close()
+	}
+	timeA := time.Since(start)
+	fmt.Printf("Server A took %s miliseconds\n", timeA)
+	return timeA
 }

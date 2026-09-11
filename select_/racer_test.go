@@ -9,16 +9,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestRacer(t *testing.T) {
-	slowServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(20 * time.Millisecond)
+func BuildDelayedServer(delay time.Duration) *httptest.Server {
+	return httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(delay)
 		w.WriteHeader(http.StatusOK)
 	}))
+}
 
-	fastServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(1 * time.Millisecond)
-		w.WriteHeader(http.StatusOK)
-	}))
+func TestRacer(t *testing.T) {
+	slowServer := BuildDelayedServer(20 * time.Millisecond)
+	fastServer := BuildDelayedServer(1 * time.Millisecond)
+
+	defer slowServer.Close()
+	defer fastServer.Close()
 
 	expect := fastServer.URL
 
