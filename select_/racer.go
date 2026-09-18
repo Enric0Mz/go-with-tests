@@ -6,27 +6,32 @@ import (
 	"time"
 )
 
-func Racer(a, b string) (winner string) {
+const timeOut10Seconds = time.Second * 10
 
-	timeA := measureResponseTime(a)
-	timeB := measureResponseTime(b)
-
-	if timeA > timeB {
-		return b
-	}
-	return a
-
+func Racer(a, b string) (winner string, err error) {
+	return ConfigurableRacer(a, b, timeOut10Seconds)
 }
 
-func measureResponseTime(url string) time.Duration {
-	start := time.Now()
-
-	resp, err := http.Get(url)
-
-	if err == nil {
-		resp.Body.Close()
+func ConfigurableRacer(a, b string, timeOutDuration time.Duration) (winner string, err error) {
+	select {
+	case <-ping(a):
+		return a, nil
+	case <-ping(b):
+		return b, nil
+	case <-time.After(timeOutDuration):
+		return "", fmt.Errorf("Time out error")
 	}
-	timeA := time.Since(start)
-	fmt.Printf("Server A took %s miliseconds\n", timeA)
-	return timeA
+}
+
+func ping(url string) chan struct{} {
+	ch := make(chan struct{})
+
+	go func() {
+		resp, err := http.Get(url)
+		if err != nil {
+			resp.Body.Close()
+		}
+		close(ch)
+	}()
+	return ch
 }
