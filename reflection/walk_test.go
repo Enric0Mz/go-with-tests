@@ -6,6 +6,16 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+type Profile struct {
+	Age  int
+	City string
+}
+
+type Person struct {
+	Name    string
+	Profile Profile
+}
+
 func TestWalk(t *testing.T) {
 
 	cases := []struct {
@@ -22,16 +32,12 @@ func TestWalk(t *testing.T) {
 			Name string
 			Age  int
 		}{"Jason", 28}, Expect: []string{"Jason"}},
-		{Name: "Nested struct", Input: struct {
-			Name    string
-			Profile struct {
-				Age  int
-				City string
-			}
-		}{"Jason", struct {
-			Age  int
-			City string
-		}{28, "Miami"}}, Expect: []string{"Jason", "Miami"}},
+		{Name: "Nested struct", Input: Person{
+			"Jason", Profile{
+				City: "Vice City",
+				Age:  28,
+			},
+		}, Expect: []string{"Jason", "Vice City"}},
 	}
 
 	for _, test := range cases {
