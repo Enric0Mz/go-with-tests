@@ -38,6 +38,24 @@ func TestWalk(t *testing.T) {
 				Age:  28,
 			},
 		}, Expect: []string{"Jason", "Vice City"}},
+		{Name: "pointers to things", Input: &Person{
+			"Trevor", Profile{
+				City: "Los Santos",
+				Age:  47,
+			},
+		}, Expect: []string{"Trevor", "Los Santos"}},
+		{Name: "slices", Input: []Profile{
+			{33, "Sofia"},
+			{66, "Athenas"},
+		}, Expect: []string{"Sofia", "Athenas"}},
+		{Name: "arrays", Input: [2]Profile{
+			{1, "down"},
+			{2, "up"},
+		}, Expect: []string{"down", "up"}},
+		{Name: "maps", Input: map[string]string{
+			"Jason": "DuVal",
+			"Lucia": "Caminos",
+		}, Expect: []string{"DuVal", "Caminos"}},
 	}
 
 	for _, test := range cases {
