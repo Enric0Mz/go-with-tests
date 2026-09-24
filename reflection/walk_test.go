@@ -52,10 +52,6 @@ func TestWalk(t *testing.T) {
 			{1, "down"},
 			{2, "up"},
 		}, Expect: []string{"down", "up"}},
-		{Name: "maps", Input: map[string]string{
-			"Jason": "DuVal",
-			"Lucia": "Caminos",
-		}, Expect: []string{"DuVal", "Caminos"}},
 	}
 
 	for _, test := range cases {
@@ -68,4 +64,30 @@ func TestWalk(t *testing.T) {
 			require.Equal(t, test.Expect, actual)
 		})
 	}
+	t.Run("with maps", func(t *testing.T) {
+		mapCase := map[string]string{
+			"Jason": "DuVal",
+			"Lucia": "Caminos",
+		}
+		expect := []string{"DuVal", "Caminos"}
+		var actual []string
+		walk(mapCase, func(input string) {
+			actual = append(actual, input)
+		})
+		require.Len(t, expect, len(actual))
+		require.True(t, assertContains(t, actual, expect[0]))
+		require.True(t, assertContains(t, actual, expect[1]))
+
+	})
+}
+
+func assertContains(t testing.TB, arr []string, target string) bool {
+	t.Helper()
+	contains := false
+	for _, curr := range arr {
+		if curr == target {
+			contains = true
+		}
+	}
+	return contains
 }
