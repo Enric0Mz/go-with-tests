@@ -1,6 +1,7 @@
 package reflection
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -78,6 +79,42 @@ func TestWalk(t *testing.T) {
 		require.True(t, assertContains(t, actual, expect[0]))
 		require.True(t, assertContains(t, actual, expect[1]))
 
+	})
+	t.Run("with channels", func(t *testing.T) {
+		aChann := make(chan Profile)
+
+		go func() {
+			aChann <- Profile{33, "Berlim"}
+			aChann <- Profile{34, "Doha"}
+			close(aChann)
+		}()
+
+		expect := []string{"Berlim", "Doha"}
+		var actual []string
+
+		walk(aChann, func(input string) {
+			actual = append(actual, input)
+		})
+
+		if !reflect.DeepEqual(actual, expect) {
+			t.Errorf("actual %s, expect %s", actual, expect)
+		}
+	})
+	t.Run("with function", func(t *testing.T) {
+		aFunc := func() (Profile, Profile) {
+			prfA := Profile{1004, "Kratos"}
+			prfB := Profile{46, "Leon"}
+			return prfA, prfB
+		}
+
+		var actual []string
+		expect := []string{"Kratos", "Leon"}
+
+		walk(aFunc, func(input string) {
+			actual = append(actual, input)
+		})
+
+		require.Equal(t, expect, actual)
 	})
 }
 
